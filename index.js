@@ -1,10 +1,9 @@
 // require('./practice/index')
-
+require('dotenv').config();
 const express = require("express");
 const routes = require("./routes/userRoute");
 const errorHandler = require("./middleware/errorHandler");
 const DB_Connection = require("./config/dbConnection");
-const dotenv = require("dotenv").config();
 const app = express();
 
 DB_Connection();
@@ -23,11 +22,11 @@ app.use(express.json());
 
 app.use(allowCrossDomain);
 app.use("/api/users", routes);
-app.use("/api/login", require("./routes/loginRoute"));
+app.use("/api", require("./routes/loginRoute"));
 app.use(errorHandler);
 
 
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
     console.log("port runnimg in ", PORT);
-    
+
 })

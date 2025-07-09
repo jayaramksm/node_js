@@ -4,8 +4,8 @@ const Users = require("../models/usersModel");
 
 const getAllUsers = expressAsyncHandler(async (req, res) => {
     let userData = []
-    userData = await Users.find();
-    console.log("users==>", userData);
+    console.log("users==>1234", req?.user.id,);
+    userData = await Users.find({ user_id: req?.user.id });
     res.status(200).json({ userData })
 });
 const getUserById = expressAsyncHandler(async (req, res) => {
@@ -19,6 +19,10 @@ const getUserById = expressAsyncHandler(async (req, res) => {
         }
 
     }
+    if (userData.user_id.toString() !== req.user.id) {
+        res.status(403)
+        throw new Error("Aunthorized")
+    }
     res.status(200).json({ userData })
 });
 const createUsers = expressAsyncHandler(async (req, res) => {
@@ -29,8 +33,11 @@ const createUsers = expressAsyncHandler(async (req, res) => {
         // .json({ mag: 'bad request' })
         throw new Error("Bad request")
     }
+    const userRequest = { name, mail, age, user_id: req?.user.id }
+    console.log("userRequest==>", req?.user.id, req.user);
+
     const user = await Users.create({
-        name, mail, age
+        ...userRequest
     })
     res.status(200).json({ message: " created users data", user: user })
 });
@@ -43,7 +50,10 @@ const updateUsers = expressAsyncHandler(async (req, res) => {
             res.status(404);
             throw new Error("user not founf");
         }
-
+        if (userData.user_id.toString() !== req.user.id) {
+            res.status(403)
+            throw new Error("Aunthorized")
+        }
     }
     const updateUser = await Users.findByIdAndUpdate(
         id, req.body, { new: true }
@@ -60,7 +70,10 @@ const deleteUsers = expressAsyncHandler(async (req, res) => {
             res.status(404);
             throw new Error("user not founf");
         }
-
+        if (userData.user_id.toString() !== req.user.id) {
+            res.status(403)
+            throw new Error("Aunthorized")
+        }
     }
     //    const responce =  await Users.findByIdAndDelete(id)
     // Delete by Other Fields

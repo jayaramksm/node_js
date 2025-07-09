@@ -1,22 +1,27 @@
 const mongoose = require("mongoose");
 
-const connectSheme = mongoose.Schema({
-    name : {
-        type:String,
-        requires:[true, "Please add the name"]
+const userScheme = mongoose.Schema({
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref:"login"
     },
-     mail : {
-        type:String,
-        requires:[true, "Please add the mail"],
-         unique: true,
+    name: {
+        type: String,
+        requires: [true, "Please add the name"]
     },
-     age : {
-        type:Number,
+    mail: {
+        type: String,
+        requires: [true, "Please add the mail"],
+        unique: true,
+    },
+    age: {
+        type: Number,
         // requires:[true, "Please add the age"],
         default: 18
     }
-},{
-    timestamps:true
+}, {
+    timestamps: true
 });
 
-module.exports = mongoose.model("user", connectSheme);
+module.exports = mongoose.model("user", userScheme);
