@@ -1,13 +1,14 @@
 const express = require("express");
 const { getAllUsers, createUsers, updateUsers, deleteUsers, getUserById } = require("../controllers/userController");
 const validateToken = require("../middleware/validateTokenHandler");
+const roleBasedAuth = require("../middleware/roleBasedAuth");
 const routes = express.Router();
 routes.use(validateToken);
-routes.get('/', getAllUsers)
-routes.get('/:id', getUserById)
-routes.post('/', createUsers);
-routes.put('/:id',updateUsers);
-routes.delete('/:id',deleteUsers);
+routes.get('/', roleBasedAuth("user", "admin", "superAdmin"), getAllUsers)
+routes.get('/:id', roleBasedAuth("admin"), getUserById)
+routes.post('/', roleBasedAuth("admin", "superAdmin"), createUsers);
+routes.put('/:id', roleBasedAuth("admin", "superAdmin"), updateUsers);
+routes.delete('/:id', roleBasedAuth("superAdmin"), deleteUsers);
 // route.get('/',(req,res)=>{
 // res.status(200).json({msg:"users data"})
 // });

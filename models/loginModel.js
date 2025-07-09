@@ -15,7 +15,11 @@ const loginScheme = mongoose.Schema({
         type: String,
         requires: [true, "Please add the password"],
     },
-
+    role: {
+        type: String,
+        requires:[true, "Please add the role"],
+        default: "user"
+    }
 }, {
     Timestamp: true
 });
